@@ -75,3 +75,11 @@ C:\Users\USER\Desktop\ForumProj\ForumProj\obj\Debug\net7.0-windows\GeneratedInte
 C:\Users\USER\Desktop\ForumProj\ForumProj\obj\Debug\net7.0-windows\Windows\CategoryWindow.baml
 C:\Users\USER\Desktop\ForumProj\ForumProj\obj\Debug\net7.0-windows\Windows\VisitorQuestionWindow.baml
 C:\Users\USER\Desktop\ForumProj\ForumProj\obj\Debug\net7.0-windows\Windows\VisitorWindow.baml
+C:\Users\USER\Desktop\ForumProj\ForumProj\obj\Debug\net7.0-windows\Windows\CreateQuestionWindow.g.cs
+C:\Users\USER\Desktop\ForumProj\ForumProj\obj\Debug\net7.0-windows\Windows\QuestionWindowUser.g.cs
+C:\Users\USER\Desktop\ForumProj\ForumProj\obj\Debug\net7.0-windows\Windows\UserQuestionsWindow.g.cs
+C:\Users\USER\Desktop\ForumProj\ForumProj\obj\Debug\net7.0-windows\Windows\UserWindow.g.cs
+C:\Users\USER\Desktop\ForumProj\ForumProj\obj\Debug\net7.0-windows\Windows\CreateQuestionWindow.baml
+C:\Users\USER\Desktop\ForumProj\ForumProj\obj\Debug\net7.0-windows\Windows\QuestionWindowUser.baml
+C:\Users\USER\Desktop\ForumProj\ForumProj\obj\Debug\net7.0-windows\Windows\UserQuestionsWindow.baml
+C:\Users\USER\Desktop\ForumProj\ForumProj\obj\Debug\net7.0-windows\Windows\UserWindow.baml

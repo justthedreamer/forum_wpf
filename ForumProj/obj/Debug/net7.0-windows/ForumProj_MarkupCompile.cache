@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET7_0;NETCOREAPP
 C:\Users\USER\Desktop\ForumProj\ForumProj\Windows\App.xaml
-61869097343
+101185370726
 
-1345882579
+18403501071
 216-811960458
-Windows\CategoryWindow.xaml;Windows\LoginWindow.xaml;Windows\RegistrationWindow.xaml;Windows\Style.xaml;Windows\VisitorQuestionWindow.xaml;Windows\VisitorWindow.xaml;
+Windows\CategoryWindow.xaml;Windows\CreateQuestionWindow.xaml;Windows\LoginWindow.xaml;Windows\QuestionWindowUser.xaml;Windows\RegistrationWindow.xaml;Windows\Style.xaml;Windows\UserQuestionsWindow.xaml;Windows\UserWindow.xaml;Windows\VisitorQuestionWindow.xaml;Windows\VisitorWindow.xaml;
 
 False
 

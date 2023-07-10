@@ -19,7 +19,6 @@ public class ForumContext : DbContext
 
 
     }
-
     public List<Category> GetCategories()
     {
         return Categories.ToList();

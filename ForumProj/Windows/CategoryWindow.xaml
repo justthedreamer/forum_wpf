@@ -6,7 +6,24 @@
         xmlns:local="clr-namespace:ForumProj.Windows"
         mc:Ignorable="d"
         Title="CategoryWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+    <ScrollViewer>
+        <Grid Background="#D8DEE9">
+            <Border 
+                BorderBrush="#2E3440"
+                BorderThickness="1"
+                Padding="10"/>
+            <TextBlock x:Name="CategoryInfo"
+                       HorizontalAlignment="Center"
+                       Margin="10,10"
+                       Foreground="#2E3440"
+                       FontSize="20"
+                       FontWeight="Heavy"
+                       FontStyle="Italic"/>
+            <Grid Margin="50,50" Background="Transparent">
+                <StackPanel x:Name="categoryQuestionsStackPanel" 
+                            Orientation="Vertical" Background="Transparent">
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
 </Window>

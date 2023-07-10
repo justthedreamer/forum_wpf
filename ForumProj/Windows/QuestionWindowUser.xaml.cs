@@ -7,47 +7,47 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using ForumProj.Model;
 
+
 namespace ForumProj.Windows;
 
-public partial class VisitorQuestionWindow : Window
+public partial class QuestionWindowUser : Window
 {
-    private static readonly ForumContext dbContext = new();
-
-    public VisitorQuestionWindow(Question question)
+    
+    private static readonly ForumContext dbContext = new ForumContext();
+    private User? thisUser;
+    private Question? thisQuestion;
+    public QuestionWindowUser(Question question,User user)
     {
         InitializeComponent();
+        thisUser = user;
+        thisQuestion = question;
         List<Answer> answers = dbContext.Answers.Where(answer => answer.QuestionID == question.ID).ToList();
         List<User> users = dbContext.Users.ToList();
         CreateQuestionContent(question);
         if (answers.Count == 0)
         {
             TextBlock info = new();
-                info.Text = "This question dont have answers yet.";
-                info.FontSize = 22;
-                info.Foreground = (Brush)new BrushConverter().ConvertFrom("#434C5E");
-                info.HorizontalAlignment = HorizontalAlignment.Center;
-                info.Margin = new Thickness(5,10,5,10);
-                info.FontStyle = FontStyles.Italic;
+            info.Text = "This question dont have answers yet.";
+            info.FontSize = 22;
+            info.Foreground = (Brush)new BrushConverter().ConvertFrom("#434C5E");
+            info.HorizontalAlignment = HorizontalAlignment.Center;
+            info.Margin = new Thickness(5,10,5,10);
+            info.FontStyle = FontStyles.Italic;
             Answers.Children.Add(info);
             return;
         }
-        for (int i = 0; i < answers.Count; i++)
-        {
-            CreateAnswersSection(answers[i],i);
-        }
+        UpdateAnswersSecion(question);
     }
-    
     private void CreateQuestionContent(Question question)
     {
         QuestionUsername.Text = dbContext.Users.FirstOrDefault(u => u.Id == question.UserID).Username;
-        QuestionId.Text = "Q"+question.ID.ToString();
+        QuestionId.Text = $"Q{question.ID.ToString()}";
         QuestionTopicBlock.Text = question.Topic;
         QuestionDate.Text = question.UpdateDate.ToString("d");
         QuestionTopicBlock.Text = question.Topic;
         QuestionContent.Text = question.Content;
 
     }
-
     private void CreateAnswersSection(Answer answer, int iterator)
     {
         var darkGray = (Brush)new BrushConverter().ConvertFrom("#2E3440");
@@ -134,5 +134,38 @@ public partial class VisitorQuestionWindow : Window
 
             Answers.Children.Add(mainGrid);
 
+    }
+    private void UpdateAnswersSecion(Question question)
+    {
+        Answers.Children.Clear();
+        List<Answer> answers = dbContext.Answers.Where(answer => answer.QuestionID == question.ID).ToList();
+        for (int i = 0; i < answers.Count; i++)
+        {
+            CreateAnswersSection(answers[i],i);
+        }
+    }
+    private void AddAnswerButton(object sender, RoutedEventArgs e)
+    {
+        if(thisUser is null) return;
+        if (AnswerContentBox.Text == "" || AnswerContentBox.Text is null)
+        {
+            ValidationInfo.Foreground = (Brush)new BrushConverter().ConvertFrom("#BF616A")!;
+            ValidationInfo.Text = "Enter some content";
+            return;
+        }
+        try
+        {
+            dbContext.Answers.Add(new Answer(thisUser.Id, thisQuestion.ID, AnswerContentBox.Text));
+            dbContext.SaveChanges();
+            AnswerContentBox.Clear();
+            ValidationInfo.Foreground = (Brush)new BrushConverter().ConvertFrom("#A3BE8C")!;
+            ValidationInfo.Text = "Succes";
+            UpdateAnswersSecion(thisQuestion);
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception);
+            throw;
+        }
     }
 }

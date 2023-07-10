@@ -3,34 +3,115 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using ForumProj.Model;
 
 namespace ForumProj.Windows;
 
-public partial class CategoryWindow : Window
+public partial class UserWindow : Window
 {
-    private static readonly ForumContext dbContext = new ();
-    private User? currentUser;
-
-    public CategoryWindow(Category category, User? user = null)
+    private static readonly ForumContext dbContext = new ForumContext();
+    private static User _user;
+    public UserWindow(User user)
     {
+       _user = user;
         InitializeComponent();
-        currentUser = user;
-        CategoryInfo.Text = category.Name;
-        List<Question> questions = dbContext.Questions.Where(question => question.Category == category.ID).ToList();
-        questions.Sort((question, question1) => question.UpdateDate > question1.UpdateDate ? 0:1 );
-        foreach (var question in questions)
-        {
-            CreateQuestion(question,dbContext.Users.FirstOrDefault(u => u.Id == question.UserID));
-        }
-
-        Console.WriteLine("HELLO");
+        UsernameTextBlock.Text = user.Username;
+        CreateCategoryListSection();
+        CreateRecentQuestionSection();
+        CreateWelcomeMessage(user);
     }
-    private void CreateQuestion(Question question,User user)
+
+    private void CreateWelcomeMessage(User user)
     {
-   var darkGray = (Brush)new BrushConverter().ConvertFrom("#2E3440");
+        var darkGray = (Brush)new BrushConverter().ConvertFrom("#5E81AC");
+        var green = (Brush)new BrushConverter().ConvertFrom("#A3BE8C");
+        
+        string username = $"{user.Username}"; // Przykładowa nazwa użytkownika
+        string message = $"Welcome back {username}. Good to see you again, have fun!";
+
+        int startIndex = message.IndexOf(username); // Pobieranie indeksu początkowego wyrazu
+        int length = username.Length; // Pobieranie długości wyrazu
+
+        Run run1 = new Run(message.Substring(0, startIndex)); // Część tekstu przed nazwą użytkownika
+        Run run2 = new Run(message.Substring(startIndex, length)); // Nazwa użytkownika
+        Run run3 = new Run(message.Substring(startIndex + length)); // Część tekstu po nazwie użytkownika
+
+// Ustawianie formatowania dla części tekstu
+        run1.Foreground = darkGray; // Kolor dla części tekstu przed nazwą użytkownika
+        run2.Foreground = green; // Kolor dla nazwy użytkownika
+        run2.FontWeight = FontWeights.Bold;
+        run3.Foreground = darkGray; // Kolor dla części tekstu po nazwie użytkownika
+
+// Dodawanie części tekstu do kontrolki TextBlock
+        WelcomeBox.Inlines.Add(run1);
+        WelcomeBox.Inlines.Add(run2);
+        WelcomeBox.Inlines.Add(run3);
+    }
+
+    private void CreateCategoryListSection()
+    {
+        List<Category> categories = dbContext.Categories.ToList();
+        CategoriesListBox.ItemsSource = categories;
+    }
+    private void MoveWindow(object sender, MouseButtonEventArgs e)
+    {
+        if(e.ChangedButton == MouseButton.Left) DragMove();
+    }
+
+    private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState.Minimized;
+    }
+
+    private void CloseButton_Click(object sender, RoutedEventArgs e)
+    {
+        this.Close();
+    }
+
+    private void CategoryItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        var selectedItem = (sender as ListBoxItem)?.DataContext as Category;
+        var newWindow = new CategoryWindow(selectedItem,_user);
+        this.Topmost = false;
+        newWindow.Topmost = true;
+        newWindow.Show();
+    }
+    private void GoToLoginSectionButton(object sender, MouseButtonEventArgs e)
+    {
+        Window loginWindow = new LoginWindow();
+        loginWindow.Show();
+        this.Close();
+    }
+    private void QuitForumButton(object sender, MouseButtonEventArgs e)
+    {
+        this.Close();
+    }
+    private void ViewMyQnA(object sender, MouseButtonEventArgs e)
+    {
+        Window userQuestions = new UserQuestionsWindow(_user);
+        userQuestions.Topmost = true;
+        userQuestions.Show();
+    }
+    private void CreateRecentQuestionSection()
+    {
+        List<Question> questions = dbContext.Questions.ToList();
+        questions.Reverse();
+        List<User> users = dbContext.Users.ToList();
+        Grid questionMainGrid = new Grid();
+
+        for (int i = 0; i < questions.Count; i++)
+        {
+            CreateRecentQuestion(questions[i],dbContext.Users.FirstOrDefault(u => u.Id == questions[i].UserID));
+            if (i == 4) return;
+        }
+    }
+    private void CreateRecentQuestion(Question question,User user)
+    {
+        var darkGray = (Brush)new BrushConverter().ConvertFrom("#2E3440");
         var mediumGray = (Brush)new BrushConverter().ConvertFrom("#4C566A");
         var lightGray = (Brush)new BrushConverter().ConvertFrom("#3B4252");
         
@@ -142,16 +223,28 @@ public partial class CategoryWindow : Window
                 Grid.SetRow(answersCountBlock,2);
                 Grid.SetColumn(answersCountBlock,1);
                 mainGrid.Children.Add(answersCountBlock);
-        
-        categoryQuestionsStackPanel.Children.Add(mainGrid);
+                
+        recentQuestionsStackPanel.Children.Add(mainGrid);
 
     }
-
+    
     private void OpenQuestion(object sender, EventArgs e, Question question)
     {
-            Window questionWindow = new VisitorQuestionWindow(question);
-            questionWindow.Show();
-            questionWindow.Topmost = true;
+        Window questionWindow = new QuestionWindowUser(question,_user);
+        questionWindow.Topmost = true;
+        questionWindow.Show();
     }
 
+    private void AddQuestion(object sender, RoutedEventArgs e)
+    {
+        Window questionWindow = new CreateQuestionWindow(_user,this);
+        questionWindow.Topmost = true;
+        questionWindow.Show();
+    }
+
+    public void UpdateRecentQuestions()
+    {
+        recentQuestionsStackPanel.Children.Clear();
+        CreateRecentQuestionSection();
+    }
 }
