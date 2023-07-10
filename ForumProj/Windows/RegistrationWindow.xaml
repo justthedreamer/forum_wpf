@@ -1,0 +1,118 @@
+<Window x:Class="ForumProj.Windows.RegistrationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:ForumProj.Windows"
+        mc:Ignorable="d"
+        Title="RegistrationWindow" MinHeight="600" Height="700" MinWidth="300" Width="700"
+        WindowStartupLocation="CenterScreen"
+        Style="{StaticResource {x:Type Window}}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="100"></ColumnDefinition>
+            <ColumnDefinition Width="500"></ColumnDefinition>
+            <ColumnDefinition Width="*" MinWidth="100"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" MinHeight="100"></RowDefinition>
+            <RowDefinition Height="500"></RowDefinition>
+            <RowDefinition Height="*" MinHeight="100"></RowDefinition>
+        </Grid.RowDefinitions>
+       
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="300"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="Auto" MinHeight="150"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            
+            <TextBlock Grid.Column="1" 
+                       Grid.Row="0"
+                       Text="Registration" 
+                       FontSize="32" 
+                       Width="Auto" 
+                       Foreground="#D8DEE9"
+                       HorizontalAlignment="Center" 
+                       VerticalAlignment="Top"/>
+            
+            <TextBlock Grid.Row="0"
+                       Grid.Column = "1"
+                       x:Name="RegistrationValidationMessage" 
+                       Foreground="#8FBCBB" 
+                       FontSize="32" 
+                       Width="Auto" 
+                       HorizontalAlignment="Center" 
+                       VerticalAlignment="Top" 
+                       Margin="0,40,0,0"/>
+            
+            <Grid Grid.Row="1" Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <!--LOGIN-->
+                <TextBlock Grid.Row="0" 
+                           Text="Login" 
+                           FontSize="24"
+                           Foreground="#D8DEE9"/>
+                <TextBox x:Name="UsernameInputBox" 
+                         Grid.Row="1" 
+                         FontSize="24"/>
+                <TextBlock x:Name="UsernameValidationMassage" 
+                           Grid.Row="2"  
+                           FontSize="16"
+                           Foreground="#BF6A6A"/> 
+                           
+                
+                <!--PASSWORD-->
+                <TextBlock Grid.Row="3" 
+                           Foreground="#D8DEE9"
+                           Text="Password" 
+                           FontSize="24"></TextBlock>
+                <PasswordBox x:Name="PasswordBox" Grid.Row="4"
+                             FontSize="24"/>
+                <TextBlock x:Name="PasswordValidationMassage" 
+                           Grid.Row="5" FontSize="18"
+                           Foreground="#BF6A6A"/>
+
+                <!--AGE-->
+                <TextBlock Grid.Row="6" 
+                           Text="Age" 
+                           FontSize="24" 
+                           Foreground="#D8DEE9"/>
+                <TextBox x:Name="AgeInputBox" 
+                         Grid.Row="7" 
+                         FontSize="24"/>
+                <TextBlock x:Name="AgeValidationMassage" 
+                           Grid.Row="8"
+                           Foreground="#BF6A6A"/>
+            </Grid>
+            
+            <Button Grid.Row="2" 
+                    Grid.Column="1" 
+                    Click="RegisterValidation" 
+                    VerticalAlignment="Top" 
+                    Margin="0,10,0,0" 
+                    Content="Register" 
+                    FontSize="24"
+                    Foreground="#D8DEE9"/>
+            
+        </Grid>
+        
+        
+        
+    </Grid>
+</Window>

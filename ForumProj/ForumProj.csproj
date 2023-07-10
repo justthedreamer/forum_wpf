@@ -23,4 +23,27 @@
       </Page>
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0-preview.5.23280.1" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0-preview.5.23280.1" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="8.0.0-preview.5.23280.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Windows\icons\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Windows\icons\files.png" />
+      <Resource Include="Windows\icons\files.png" />
+      <None Remove="Windows\icons\logout.png" />
+      <Resource Include="Windows\icons\logout.png" />
+      <None Remove="Windows\icons\power-off.png" />
+      <Resource Include="Windows\icons\power-off.png" />
+      <None Remove="Windows\icons\setting.png" />
+      <Resource Include="Windows\icons\setting.png" />
+      <None Remove="Windows\icons\user.png" />
+      <Resource Include="Windows\icons\user.png" />
+    </ItemGroup>
+
 </Project>

@@ -24,5 +24,25 @@ namespace ForumProj
         {
             InitializeComponent();
         }
+
+        private void trySingIn(object sender, KeyEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SingInButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void RegistrationButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void VisitorButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
