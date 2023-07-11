@@ -146,12 +146,21 @@ public partial class CategoryWindow : Window
         categoryQuestionsStackPanel.Children.Add(mainGrid);
 
     }
-
     private void OpenQuestion(object sender, EventArgs e, Question question)
     {
+        if (currentUser is null)
+        {
             Window questionWindow = new VisitorQuestionWindow(question);
             questionWindow.Show();
             questionWindow.Topmost = true;
+        }
+        else
+        {
+            Window questionWindow = new QuestionWindowUser(question,currentUser);
+            questionWindow.Show();
+            questionWindow.Topmost = true;
+        }
+
     }
 
 }
