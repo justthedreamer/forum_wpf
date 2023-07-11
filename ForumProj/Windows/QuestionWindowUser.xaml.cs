@@ -147,10 +147,18 @@ public partial class QuestionWindowUser : Window
     private void AddAnswerButton(object sender, RoutedEventArgs e)
     {
         if(thisUser is null) return;
-        if (AnswerContentBox.Text == "" || AnswerContentBox.Text is null)
+        if (AnswerContentBox.Text == "" || AnswerContentBox.Text is null )
         {
             ValidationInfo.Foreground = (Brush)new BrushConverter().ConvertFrom("#BF616A")!;
             ValidationInfo.Text = "Enter some content";
+            return;
+        }
+
+        if (AnswerContentBox.Text.Length < 5|| AnswerContentBox.Text.Length > 500)
+        {
+            ValidationInfo.Foreground = (Brush)new BrushConverter().ConvertFrom("#BF616A")!;
+            ValidationInfo.Text = "Content needs 5 to 500 characters.";
+
             return;
         }
         try

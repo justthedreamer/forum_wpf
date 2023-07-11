@@ -34,12 +34,10 @@ public partial class UserQuestionsWindow : Window
     {
         CreateFiled(dbContext.Questions.FirstOrDefault(q => q.ID == userAnswer.QuestionID),"You post answer","A",user);
     }
-
     private void CreateQuestionField(Question userQuestion, User user)
     {
         CreateFiled(userQuestion, "Your question","Q",user);
     }
-
     private void CreateFiled(Question question,string sourceInfo , string sourceSing, User user )
     {
         var darkGray = (Brush)new BrushConverter().ConvertFrom("#2E3440");

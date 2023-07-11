@@ -7,7 +7,8 @@
         xmlns:model="clr-namespace:ForumProj.Model"
         mc:Ignorable="d"
         Title="CreateQuestionWindow" Height="600" Width="600"
-        ResizeMode="NoResize">
+        ResizeMode="CanResize"
+        Background="#D8DEE9">
     <Window.Resources>
         <ObjectDataProvider x:Key="Categories" ObjectType="{x:Type  model:ForumContext}" MethodName="GetCategories"></ObjectDataProvider>
     </Window.Resources>
@@ -81,6 +82,7 @@
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0"
                        x:Name="ValidationInfo"
+                       TextWrapping="Wrap"
                        Foreground="#BF616A"
                        FontSize="16"
                        VerticalAlignment="Center"
@@ -89,6 +91,7 @@
                     Margin="10,10"
                     Content="Add Question"
                     Padding="5,2.5"
+                    Height="Auto"
                     Foreground="#5E81AC"
                     FontSize="20"
                     Click="CreateQuestion"/>

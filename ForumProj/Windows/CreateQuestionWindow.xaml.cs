@@ -19,6 +19,7 @@ public partial class CreateQuestionWindow : Window
 
     private void CreateQuestion(object sender, RoutedEventArgs e)
     {
+        var questionTopic = dbContext.Questions.FirstOrDefault(question => question.Topic == TopicTextBox.Text.Trim());
         if (CategoryBox.Text == "" || CategoryBox.Text is null)
         {
             ValidationInfo.Text = "Choose category.";
@@ -30,10 +31,22 @@ public partial class CreateQuestionWindow : Window
             ValidationInfo.Text = "Enter question topic";
             return;
         }
-
-        if (ContentTextBox.Text == "" || TopicTextBox.Text is null)
+        if (TopicTextBox.Text.Length < 10 || TopicTextBox.Text.Length > 100 )
         {
-            ValidationInfo.Text = "Enter question content";
+            ValidationInfo.Text = "Topic needs 10 to 100 characters.";
+            return;
+        }
+        if (questionTopic is not null)
+        {
+            ValidationInfo.Text = $"This question topic is already exist. You could find it by Q{questionTopic.ID} id " +
+                                  $"in {dbContext.Categories.FirstOrDefault(c => c.ID == questionTopic.Category).Name} category section." +
+                                  $"However if you want to add again this question, please change topic.";
+            return;
+        }
+
+        if (ContentTextBox.Text.Length < 5 || ContentTextBox.Text.Length > 500 )
+        {
+            ValidationInfo.Text = "Content needs 5 to 500 characters.";
             return;
         }
 
@@ -47,7 +60,7 @@ public partial class CreateQuestionWindow : Window
         }
         catch (Exception exception)
         {
-            ValidationInfo.Text = "Something goes wrong";
+            ValidationInfo.Text = "Something goes wrong. Try again later or contact administrator.";
             Console.WriteLine(exception);
             throw;
         }
