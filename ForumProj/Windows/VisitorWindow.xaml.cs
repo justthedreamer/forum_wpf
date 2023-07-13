@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,66 +10,43 @@ using ForumProj.Model;
 
 namespace ForumProj.Windows;
 
+
 public partial class VisitorWindow : Window
 {
+    public List<Window> openedWindow = new List<Window>();
+
     private static readonly ForumContext dbContext = new ForumContext();
     public VisitorWindow()
     {
         InitializeComponent();
-        /*category list*/
         List<Category> categories = dbContext.Categories.ToList();
         CategoriesListBox.ItemsSource = categories;
         CreateRecentQuestionSection();
         CreateWelcomMessage();
-
     }
-
     private void CreateWelcomMessage()
     {
-        string message =
-            "Welcome to our forum! We're glad you're here. Feel free to introduce yourself and start exploring the discussions. If you have any questions, our community is here to help. Enjoy your time and happy posting!";
+        string message = "Welcome to our forum! We're glad you're here. Feel free to introduce yourself and start exploring the discussions. If you have any questions, our community is here to help. Enjoy your time and happy posting!";
         WelcomeBox.Text = message;
     }
-
-    private string GetCategoryName(int categoryID)
-    {
-        List<Category> categories = dbContext.Categories.ToList();
-        return dbContext.Categories.FirstOrDefault(q => q.ID == categoryID).Name;
-    }
-    private void MinimizeButton_Click(object sender, RoutedEventArgs e)
-    {
-        WindowState = WindowState.Minimized;
-    }
-    private void CloseButton_Click(object sender, RoutedEventArgs e)
-    {
-        Close();
-    }
+    private void MinimizeButton_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
     private void MoveWindow(object sender, MouseButtonEventArgs e)
     {
         if(e.ChangedButton == MouseButton.Left) DragMove();
     }
-    private void UIElement_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        this.Close();
-    }
-    /*Category Page*/
     private void CategoryItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-        var selectedItem = (sender as ListBoxItem)?.DataContext as Category;
-        var newWindow = new CategoryWindow(selectedItem);
-        newWindow.Topmost = true;
-        newWindow.Show();
+            var selectedCategory = (sender as ListBoxItem)?.DataContext as Category;
+            var categoryWindow = new CategoryWindow(selectedCategory);
+            categoryWindow.Show();
     }
     private void GoToLoginSectionButton(object sender, MouseButtonEventArgs e)
     {
         Window loginWindow = new LoginWindow();
         loginWindow.Show();
-        this.Close();
+        
     }
-    private void QuitForumButton(object sender, MouseButtonEventArgs e)
-    {
-        this.Close();
-    }
+    private void QuitForumButton(object sender, MouseButtonEventArgs e)=> Application.Current.Shutdown();
     private void CreateRecentQuestionSection()
     {
         List<Question> questions = dbContext.Questions.ToList();
@@ -198,13 +174,15 @@ public partial class VisitorWindow : Window
                 mainGrid.Children.Add(answersCountBlock);
                 
          recentQuestionsStackPanel.Children.Add(mainGrid);
-
     }
-
     private void OpenQuestion(object sender, EventArgs e, Question question)
     {
         Window questionWindow = new VisitorQuestionWindow(question);
+
         questionWindow.Show();
     }
+    private void CloseButton_Click(object sender, RoutedEventArgs e) => Application.Current.Shutdown();
 
 }
+
+

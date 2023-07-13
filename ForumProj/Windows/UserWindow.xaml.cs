@@ -13,45 +13,45 @@ namespace ForumProj.Windows;
 
 public partial class UserWindow : Window
 {
+    private List<Window> openWindowList = new List<Window>();
+    private Dictionary<int, Window> currentQuestionsOpen = new Dictionary<int, Window>();
+
     private static readonly ForumContext dbContext = new ForumContext();
     private static User _user;
     public UserWindow(User user)
     {
-       _user = user;
+        _user = user;
         InitializeComponent();
+        openWindowList.Add(this);
         UsernameTextBlock.Text = user.Username;
         CreateCategoryListSection();
         CreateRecentQuestionSection();
         CreateWelcomeMessage(user);
     }
-
     private void CreateWelcomeMessage(User user)
     {
         var darkGray = (Brush)new BrushConverter().ConvertFrom("#5E81AC");
         var green = (Brush)new BrushConverter().ConvertFrom("#A3BE8C");
         
-        string username = $"{user.Username}"; // Przykładowa nazwa użytkownika
+        string username = $"{user.Username}"; 
         string message = $"Welcome back {username}. Good to see you again, have fun!";
 
-        int startIndex = message.IndexOf(username); // Pobieranie indeksu początkowego wyrazu
-        int length = username.Length; // Pobieranie długości wyrazu
+        int startIndex = message.IndexOf(username); 
+        int length = username.Length; 
 
-        Run run1 = new Run(message.Substring(0, startIndex)); // Część tekstu przed nazwą użytkownika
-        Run run2 = new Run(message.Substring(startIndex, length)); // Nazwa użytkownika
-        Run run3 = new Run(message.Substring(startIndex + length)); // Część tekstu po nazwie użytkownika
+        Run run1 = new Run(message.Substring(0, startIndex)); 
+        Run run2 = new Run(message.Substring(startIndex, length)); 
+        Run run3 = new Run(message.Substring(startIndex + length)); 
 
-// Ustawianie formatowania dla części tekstu
-        run1.Foreground = darkGray; // Kolor dla części tekstu przed nazwą użytkownika
-        run2.Foreground = green; // Kolor dla nazwy użytkownika
+        run1.Foreground = darkGray;
+        run2.Foreground = green; 
         run2.FontWeight = FontWeights.Bold;
-        run3.Foreground = darkGray; // Kolor dla części tekstu po nazwie użytkownika
+        run3.Foreground = darkGray; 
 
-// Dodawanie części tekstu do kontrolki TextBlock
         WelcomeBox.Inlines.Add(run1);
         WelcomeBox.Inlines.Add(run2);
         WelcomeBox.Inlines.Add(run3);
     }
-
     private void CreateCategoryListSection()
     {
         List<Category> categories = dbContext.Categories.ToList();
@@ -61,21 +61,19 @@ public partial class UserWindow : Window
     {
         if(e.ChangedButton == MouseButton.Left) DragMove();
     }
-
     private void MinimizeButton_Click(object sender, RoutedEventArgs e)
     {
         WindowState = WindowState.Minimized;
     }
-
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
         this.Close();
     }
-
     private void CategoryItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
         var selectedItem = (sender as ListBoxItem)?.DataContext as Category;
         var newWindow = new CategoryWindow(selectedItem,_user);
+        openWindowList.Add(newWindow);
         this.Topmost = false;
         newWindow.Topmost = true;
         newWindow.Show();
@@ -84,15 +82,19 @@ public partial class UserWindow : Window
     {
         Window loginWindow = new LoginWindow();
         loginWindow.Show();
-        this.Close();
+        openWindowList.ForEach(w => w.Close());
     }
     private void QuitForumButton(object sender, MouseButtonEventArgs e)
     {
-        this.Close();
+        foreach (var window in openWindowList)
+        {
+            window.Close();
+        }
     }
     private void ViewMyQnA(object sender, MouseButtonEventArgs e)
     {
         Window userQuestions = new UserQuestionsWindow(_user);
+        openWindowList.Add(userQuestions);
         userQuestions.Topmost = true;
         userQuestions.Show();
     }
@@ -227,21 +229,29 @@ public partial class UserWindow : Window
         recentQuestionsStackPanel.Children.Add(mainGrid);
 
     }
-    
     private void OpenQuestion(object sender, EventArgs e, Question question)
     {
-        Window questionWindow = new QuestionWindowUser(question,_user);
-        questionWindow.Topmost = true;
-        questionWindow.Show();
+        if (currentQuestionsOpen.ContainsKey(question.ID))
+        {
+            currentQuestionsOpen[question.ID].Activate();
+            
+        }
+        else
+        {
+            Window questionWindow = new QuestionWindowUser(question, _user);
+            openWindowList.Add(questionWindow);
+            currentQuestionsOpen.Add(question.ID,questionWindow);
+            questionWindow.Topmost = true;
+            questionWindow.Show();
+        }
+ 
     }
-
     private void AddQuestion(object sender, RoutedEventArgs e)
     {
         Window questionWindow = new CreateQuestionWindow(_user,this);
         questionWindow.Topmost = true;
         questionWindow.Show();
     }
-
     public void UpdateRecentQuestions()
     {
         recentQuestionsStackPanel.Children.Clear();

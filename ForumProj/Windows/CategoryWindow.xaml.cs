@@ -12,12 +12,12 @@ namespace ForumProj.Windows;
 public partial class CategoryWindow : Window
 {
     private static readonly ForumContext dbContext = new ();
-    private User? currentUser;
+    private User? _currentUser;
 
-    public CategoryWindow(Category category, User? user = null)
+    public CategoryWindow(Category category,User? user = null)
     {
         InitializeComponent();
-        currentUser = user;
+        _currentUser = user;
         CategoryInfo.Text = category.Name;
         List<Question> questions = dbContext.Questions.Where(question => question.Category == category.ID).ToList();
         questions.Sort((question, question1) => question.UpdateDate > question1.UpdateDate ? 0:1 );
@@ -25,8 +25,6 @@ public partial class CategoryWindow : Window
         {
             CreateQuestion(question,dbContext.Users.FirstOrDefault(u => u.Id == question.UserID));
         }
-
-        Console.WriteLine("HELLO");
     }
     private void CreateQuestion(Question question,User user)
     {
@@ -144,23 +142,10 @@ public partial class CategoryWindow : Window
                 mainGrid.Children.Add(answersCountBlock);
         
         categoryQuestionsStackPanel.Children.Add(mainGrid);
-
     }
     private void OpenQuestion(object sender, EventArgs e, Question question)
     {
-        if (currentUser is null)
-        {
-            Window questionWindow = new VisitorQuestionWindow(question);
-            questionWindow.Show();
-            questionWindow.Topmost = true;
-        }
-        else
-        {
-            Window questionWindow = new QuestionWindowUser(question,currentUser);
-            questionWindow.Show();
-            questionWindow.Topmost = true;
-        }
-
+                Window questionWindow = new QuestionWindowUser(question,_currentUser);
+                questionWindow.Show();
     }
-
 }

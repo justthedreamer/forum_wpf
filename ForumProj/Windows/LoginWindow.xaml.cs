@@ -7,17 +7,11 @@ using ForumProj.Windows;
 
 namespace ForumProj
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
 public partial class LoginWindow : Window
 {
     private bool _isRegistrationWindowOpen = false;
-    private bool _isUserPageOpen = false;
-    private bool _isVisitorPageOpen = false;
     
     private RegistrationWindow? _registrationPage;
-    private UserWindow? _userPage;
     private VisitorWindow? _visitorPage;
     
     private static readonly ForumContext DbContext = new();
@@ -61,7 +55,6 @@ public partial class LoginWindow : Window
                 InfoBox.Style = (Style)FindResource("SuccessMassage");
                 InfoBox.Text = "Succes";
                 Window userWindow = new UserWindow(user);
-                userWindow.Topmost = true;
                 userWindow.Show();
                 this.Close();
             }
@@ -78,10 +71,6 @@ public partial class LoginWindow : Window
         _visitorPage = new();
         _visitorPage.Show();
         this.Close();
-    }
-    private void UserPage_Closed(object sender, EventArgs e)
-    {
-        _isUserPageOpen = false;
     }
 
  
