@@ -72,6 +72,7 @@ public partial class UserWindow : Window
     {
         Window loginWindow = new LoginWindow();
         loginWindow.Show();
+        this.Close();
     }
     private void QuitForumButton(object sender, MouseButtonEventArgs e)  => Application.Current.Shutdown();
     private void ViewMyQnA(object sender, MouseButtonEventArgs e)
@@ -79,6 +80,7 @@ public partial class UserWindow : Window
         Window userQuestions = new UserQuestionsWindow(_user);
         userQuestions.Show();
     }
+    
     private void CreateRecentQuestionSection()
     {
         List<Question> questions = dbContext.Questions.ToList();
@@ -110,6 +112,7 @@ public partial class UserWindow : Window
             mainGrid.ColumnDefinitions.Add(new ColumnDefinition());
 
         Grid userBoxGrid = new();
+            userBoxGrid.Width = 120;
             userBoxGrid.VerticalAlignment = VerticalAlignment.Top;
             userBoxGrid.RowDefinitions.Add(new RowDefinition());
             userBoxGrid.RowDefinitions.Add(new RowDefinition());
@@ -136,9 +139,10 @@ public partial class UserWindow : Window
                 usernameTextBlock.Text = dbContext.Users.FirstOrDefault(u => u.Id == question.UserID).Username;
                 usernameTextBlock.Foreground = darkGray;
                 usernameTextBlock.HorizontalAlignment = HorizontalAlignment.Center;
+                usernameTextBlock.VerticalAlignment = VerticalAlignment.Center;
+                usernameTextBlock.TextAlignment = TextAlignment.Center;
                 usernameTextBlock.MaxWidth = 150;
                 usernameTextBlock.TextWrapping = TextWrapping.Wrap;
-                usernameTextBlock.HorizontalAlignment = HorizontalAlignment.Center;
                 usernameTextBlock.Padding = new Thickness(15, 2.5, 15, 2.5);
                 Grid.SetRow(usernameTextBlock,1);
                 userBoxGrid.Children.Add(usernameTextBlock);
@@ -158,8 +162,9 @@ public partial class UserWindow : Window
             questionContentBox.FontSize = 16;
             questionContentBox.Padding = new Thickness(10, 10, 50, 10);
             questionContentBox.Foreground = darkGray;
-            questionContentBox.Text = question.Content.ToString();
+            questionContentBox.Text = question.Topic.ToString();
             questionContentBox.TextWrapping = TextWrapping.Wrap;
+            questionContentBox.VerticalAlignment = VerticalAlignment.Center;
             contentBoxGrid.Children.Add(questionContentBox);
             
             TextBlock questionIdBox = new();
@@ -198,7 +203,7 @@ public partial class UserWindow : Window
                 OpenQuestion(sender, e,question);
             };
             TextBlock answersCountBlock = new();
-                answersCountBlock.Text = $"Total answers: {dbContext.Answers.Count(a => a.UserID == question.ID).ToString()}";
+                answersCountBlock.Text = $"Total answers: {dbContext.Answers.Count(a => a.QuestionID == question.ID).ToString()}";
                 answersCountBlock.HorizontalAlignment = HorizontalAlignment.Left;
                 answersCountBlock.Margin = new Thickness(10, 0, 0, 0);
                 answersCountBlock.Foreground = darkGray;
@@ -210,6 +215,7 @@ public partial class UserWindow : Window
         recentQuestionsStackPanel.Children.Add(mainGrid);
 
     }
+    
     private void OpenQuestion(object sender, EventArgs e, Question question)
     {
             Window questionWindow = new QuestionWindowUser(question, _user);

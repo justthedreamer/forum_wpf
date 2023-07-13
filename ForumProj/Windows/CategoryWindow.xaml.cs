@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -13,10 +14,10 @@ public partial class CategoryWindow : Window
 {
     private static readonly ForumContext dbContext = new ();
     private User? _currentUser;
-
     public CategoryWindow(Category category,User? user = null)
     {
         InitializeComponent();
+        
         _currentUser = user;
         CategoryInfo.Text = category.Name;
         List<Question> questions = dbContext.Questions.Where(question => question.Category == category.ID).ToList();
@@ -145,7 +146,20 @@ public partial class CategoryWindow : Window
     }
     private void OpenQuestion(object sender, EventArgs e, Question question)
     {
-                Window questionWindow = new QuestionWindowUser(question,_currentUser);
-                questionWindow.Show();
+        if (_currentUser is null)
+        {
+            Window questionWindow = new VisitorQuestionWindow(question);
+            questionWindow.Show();
+            
+        }else
+        {
+            Window questionWindow = new QuestionWindowUser(question,_currentUser);
+            questionWindow.Show();
+        }
+    }
+    public void Dispose()
+    {
+
+
     }
 }

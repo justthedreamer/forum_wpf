@@ -13,8 +13,6 @@ namespace ForumProj.Windows;
 
 public partial class VisitorWindow : Window
 {
-    public List<Window> openedWindow = new List<Window>();
-
     private static readonly ForumContext dbContext = new ForumContext();
     public VisitorWindow()
     {
@@ -22,9 +20,9 @@ public partial class VisitorWindow : Window
         List<Category> categories = dbContext.Categories.ToList();
         CategoriesListBox.ItemsSource = categories;
         CreateRecentQuestionSection();
-        CreateWelcomMessage();
+        CreateWelcomeMessage();
     }
-    private void CreateWelcomMessage()
+    private void CreateWelcomeMessage()
     {
         string message = "Welcome to our forum! We're glad you're here. Feel free to introduce yourself and start exploring the discussions. If you have any questions, our community is here to help. Enjoy your time and happy posting!";
         WelcomeBox.Text = message;
@@ -39,14 +37,16 @@ public partial class VisitorWindow : Window
             var selectedCategory = (sender as ListBoxItem)?.DataContext as Category;
             var categoryWindow = new CategoryWindow(selectedCategory);
             categoryWindow.Show();
+            categoryWindow.Activate();
     }
     private void GoToLoginSectionButton(object sender, MouseButtonEventArgs e)
     {
         Window loginWindow = new LoginWindow();
         loginWindow.Show();
-        
+        this.Close();
     }
     private void QuitForumButton(object sender, MouseButtonEventArgs e)=> Application.Current.Shutdown();
+    
     private void CreateRecentQuestionSection()
     {
         List<Question> questions = dbContext.Questions.ToList();
@@ -68,12 +68,12 @@ public partial class VisitorWindow : Window
             RowDefinition rowDefinition = new();
             mainGrid.RowDefinitions.Add(new RowDefinition(){Height = GridLength.Auto});
             mainGrid.RowDefinitions.Add(new RowDefinition(){Height = GridLength.Auto});
-            ColumnDefinition columnDefinition = new();
-            columnDefinition.Width = GridLength.Auto;
-            mainGrid.ColumnDefinitions.Add(columnDefinition);
+            
+            mainGrid.ColumnDefinitions.Add(new ColumnDefinition(){Width = GridLength.Auto});
             mainGrid.ColumnDefinitions.Add(new ColumnDefinition());
 
         Grid userBoxGrid = new();
+            userBoxGrid.Width = 120;
             userBoxGrid.VerticalAlignment = VerticalAlignment.Top;
             userBoxGrid.RowDefinitions.Add(new RowDefinition());
             userBoxGrid.RowDefinitions.Add(new RowDefinition());
@@ -100,9 +100,10 @@ public partial class VisitorWindow : Window
                 usernameTextBlock.Text = dbContext.Users.FirstOrDefault(u => u.Id == question.UserID).Username;
                 usernameTextBlock.Foreground = darkGray;
                 usernameTextBlock.HorizontalAlignment = HorizontalAlignment.Center;
+                usernameTextBlock.VerticalAlignment = VerticalAlignment.Center;
+                usernameTextBlock.TextAlignment = TextAlignment.Center;
                 usernameTextBlock.MaxWidth = 150;
                 usernameTextBlock.TextWrapping = TextWrapping.Wrap;
-                usernameTextBlock.HorizontalAlignment = HorizontalAlignment.Center;
                 usernameTextBlock.Padding = new Thickness(15, 2.5, 15, 2.5);
                 Grid.SetRow(usernameTextBlock,1);
                 userBoxGrid.Children.Add(usernameTextBlock);
@@ -123,9 +124,11 @@ public partial class VisitorWindow : Window
             questionContentBox.FontSize = 16;
             questionContentBox.Padding = new Thickness(10, 10, 50, 10);
             questionContentBox.Foreground = darkGray;
-            questionContentBox.Text = question.Content.ToString();
+            questionContentBox.Text = question.Topic.ToString();
             questionContentBox.TextWrapping = TextWrapping.Wrap;
+            questionContentBox.VerticalAlignment = VerticalAlignment.Center;
             contentBoxGrid.Children.Add(questionContentBox);
+            
             
             TextBlock questionIdBox = new();
             questionIdBox.VerticalAlignment = VerticalAlignment.Top;
@@ -164,7 +167,7 @@ public partial class VisitorWindow : Window
                 OpenQuestion(sender, e,question);
             };
             TextBlock answersCountBlock = new();
-                answersCountBlock.Text = $"Total answers: {dbContext.Answers.Count(a => a.UserID == question.ID).ToString()}";
+                answersCountBlock.Text = $"Total answers: {dbContext.Answers.Count(a => a.QuestionID == question.ID).ToString()}";
                 answersCountBlock.HorizontalAlignment = HorizontalAlignment.Left;
                 answersCountBlock.Margin = new Thickness(10, 0, 0, 0);
                 answersCountBlock.Foreground = darkGray;
@@ -175,14 +178,15 @@ public partial class VisitorWindow : Window
                 
          recentQuestionsStackPanel.Children.Add(mainGrid);
     }
+    
     private void OpenQuestion(object sender, EventArgs e, Question question)
     {
         Window questionWindow = new VisitorQuestionWindow(question);
-
         questionWindow.Show();
     }
     private void CloseButton_Click(object sender, RoutedEventArgs e) => Application.Current.Shutdown();
-
+    
+    
 }
 
 

@@ -6,13 +6,17 @@
         xmlns:local="clr-namespace:ForumProj.Windows"
         xmlns:model="clr-namespace:ForumProj.Model"
         mc:Ignorable="d"
-        Title="CreateQuestionWindow" Height="600" Width="600"
+        Title="Create Question" 
+        Height="Auto" 
+        Width="600"
         ResizeMode="CanResize"
-        Background="#D8DEE9">
+        Background="#D8DEE9"
+        MinWidth="600">
     <Window.Resources>
         <ObjectDataProvider x:Key="Categories" ObjectType="{x:Type  model:ForumContext}" MethodName="GetCategories"></ObjectDataProvider>
     </Window.Resources>
-    <Grid>
+    
+    <Grid MaxWidth="960">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>

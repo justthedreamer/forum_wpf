@@ -18,6 +18,7 @@ public partial class VisitorQuestionWindow : Window
         InitializeComponent();
         List<Answer> answers = dbContext.Answers.Where(answer => answer.QuestionID == question.ID).ToList();
         List<User> users = dbContext.Users.ToList();
+        CategoryName.Text = dbContext.Categories.FirstOrDefault(c => c.ID == question.Category).Name;
         CreateQuestionContent(question);
         if (answers.Count == 0)
         {
@@ -45,7 +46,6 @@ public partial class VisitorQuestionWindow : Window
         QuestionDate.Text = question.UpdateDate.ToString("d");
         QuestionTopicBlock.Text = question.Topic;
         QuestionContent.Text = question.Content;
-
     }
 
     private void CreateAnswersSection(Answer answer, int iterator)
