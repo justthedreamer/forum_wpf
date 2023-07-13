@@ -13,16 +13,12 @@ namespace ForumProj.Windows;
 
 public partial class UserWindow : Window
 {
-    private List<Window> openWindowList = new List<Window>();
-    private Dictionary<int, Window> currentQuestionsOpen = new Dictionary<int, Window>();
-
     private static readonly ForumContext dbContext = new ForumContext();
     private static User _user;
     public UserWindow(User user)
     {
         _user = user;
         InitializeComponent();
-        openWindowList.Add(this);
         UsernameTextBlock.Text = user.Username;
         CreateCategoryListSection();
         CreateRecentQuestionSection();
@@ -65,37 +61,22 @@ public partial class UserWindow : Window
     {
         WindowState = WindowState.Minimized;
     }
-    private void CloseButton_Click(object sender, RoutedEventArgs e)
-    {
-        this.Close();
-    }
+    private void CloseButton_Click(object sender, RoutedEventArgs e) => Application.Current.Shutdown();
     private void CategoryItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
         var selectedItem = (sender as ListBoxItem)?.DataContext as Category;
         var newWindow = new CategoryWindow(selectedItem,_user);
-        openWindowList.Add(newWindow);
-        this.Topmost = false;
-        newWindow.Topmost = true;
         newWindow.Show();
     }
     private void GoToLoginSectionButton(object sender, MouseButtonEventArgs e)
     {
         Window loginWindow = new LoginWindow();
         loginWindow.Show();
-        openWindowList.ForEach(w => w.Close());
     }
-    private void QuitForumButton(object sender, MouseButtonEventArgs e)
-    {
-        foreach (var window in openWindowList)
-        {
-            window.Close();
-        }
-    }
+    private void QuitForumButton(object sender, MouseButtonEventArgs e)  => Application.Current.Shutdown();
     private void ViewMyQnA(object sender, MouseButtonEventArgs e)
     {
         Window userQuestions = new UserQuestionsWindow(_user);
-        openWindowList.Add(userQuestions);
-        userQuestions.Topmost = true;
         userQuestions.Show();
     }
     private void CreateRecentQuestionSection()
@@ -231,20 +212,9 @@ public partial class UserWindow : Window
     }
     private void OpenQuestion(object sender, EventArgs e, Question question)
     {
-        if (currentQuestionsOpen.ContainsKey(question.ID))
-        {
-            currentQuestionsOpen[question.ID].Activate();
-            
-        }
-        else
-        {
             Window questionWindow = new QuestionWindowUser(question, _user);
-            openWindowList.Add(questionWindow);
-            currentQuestionsOpen.Add(question.ID,questionWindow);
             questionWindow.Topmost = true;
             questionWindow.Show();
-        }
- 
     }
     private void AddQuestion(object sender, RoutedEventArgs e)
     {
