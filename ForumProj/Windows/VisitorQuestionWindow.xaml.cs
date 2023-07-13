@@ -16,6 +16,8 @@ public partial class VisitorQuestionWindow : Window
     public VisitorQuestionWindow(Question question)
     {
         InitializeComponent();
+        this.Title = question.Topic;
+        
         List<Answer> answers = dbContext.Answers.Where(answer => answer.QuestionID == question.ID).ToList();
         List<User> users = dbContext.Users.ToList();
         CategoryName.Text = dbContext.Categories.FirstOrDefault(c => c.ID == question.Category).Name;

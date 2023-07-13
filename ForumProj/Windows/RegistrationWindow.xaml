@@ -5,10 +5,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:ForumProj.Windows"
         mc:Ignorable="d"
-        Title="RegistrationWindow" MinHeight="600" Height="700" MinWidth="300" Width="700"
+        Title="Register Forum" 
+        MinHeight="600" 
+        Height="Auto" 
+        Width="700"
+        MinWidth="600"
         WindowStartupLocation="CenterScreen"
         Style="{StaticResource {x:Type Window}}">
-    <Grid>
+    <Grid MaxWidth="1280">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" MinWidth="100"></ColumnDefinition>
             <ColumnDefinition Width="500"></ColumnDefinition>

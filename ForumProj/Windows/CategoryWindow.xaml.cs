@@ -17,6 +17,7 @@ public partial class CategoryWindow : Window
     public CategoryWindow(Category category,User? user = null)
     {
         InitializeComponent();
+        this.Title = category.Name;
         
         _currentUser = user;
         CategoryInfo.Text = category.Name;

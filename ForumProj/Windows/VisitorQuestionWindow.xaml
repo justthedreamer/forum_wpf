@@ -5,14 +5,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:ForumProj.Windows"
         mc:Ignorable="d"
-        Title="VisitorQuestionWindow" 
         Height="Auto" 
         Width="800"
         MinWidth="600"
         Background="#E5E9F0">
     <ScrollViewer>
         <Grid Background="#D8DEE9"
-              MaxWidth="960">
+              MaxWidth="1280">
             <Grid.RowDefinitions>
                 <!--Question BOX-->
                 <RowDefinition Height="Auto"></RowDefinition>

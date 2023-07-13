@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ForumProj.Windows"
         xmlns:model="clr-namespace:ForumProj.Model"
         mc:Ignorable="d"
-        Title="Create Question" 
+        Title="Create new Question" 
         Height="Auto" 
         Width="600"
         ResizeMode="CanResize"

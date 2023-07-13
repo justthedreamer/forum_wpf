@@ -5,9 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ForumProj"
         mc:Ignorable="d"
-        Title="LoginWindow" Height="500" Width="800"
+        Title="Welcome Forum" 
+        Height="500" 
+        Width="800"
         Style="{StaticResource {x:Type Window}}"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen">
    
    <Grid>
         <Grid.ColumnDefinitions>

@@ -19,6 +19,7 @@ public partial class QuestionWindowUser : Window
     public QuestionWindowUser(Question question,User user)
     {
         InitializeComponent();
+        this.Title = question.Topic;
         thisUser = user;
         thisQuestion = question;
         List<Answer> answers = dbContext.Answers.Where(answer => answer.QuestionID == question.ID).ToList();
