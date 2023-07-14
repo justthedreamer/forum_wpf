@@ -1,38 +1,39 @@
 using System;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security;
 using System.Windows;
 using ForumProj.Model;
 
 
 namespace ForumProj.Windows;
 
-public partial class RegistrationWindow : Window
+/// <summary>
+/// Registration window.
+/// </summary>
+public partial class RegistrationWindow
 {
-    ForumContext dbContext = new ();
+    //Database context
+    private readonly ForumContext _dbContext = new ();
 
     public RegistrationWindow()
     {
         InitializeComponent();
     }
 
-
+    // Check user input with rules and DB.
     private void RegisterValidation(object sender, RoutedEventArgs e)
     {
         RegistrationValidationMessage.Text = "";
-        
-        int age = 0;
-        string username = "";
+
         string password = PasswordBox.Password;
         
-        bool ageFlag = isAgeValid(AgeInputBox.Text.Trim(' '),out age);
-        bool usernameFlag = isUsernameValid(UsernameInputBox.Text.Trim(' '),out username);
-        bool passwordFlag = isPasswordValid(password);
+        bool ageFlag = IsAgeValid(AgeInputBox.Text.Trim(' '),out var age);
+        bool usernameFlag = IsUsernameValid(UsernameInputBox.Text.Trim(' '),out var username);
+        bool passwordFlag = IsPasswordValid(password);
         if(ageFlag && usernameFlag && passwordFlag) CreateUser(username,age,password);
     }
 
-    private bool isPasswordValid(in string password)
+    // Password rules : 8-64 char.
+    private bool IsPasswordValid(in string password)
     {
         if (password.Length < 8 || password.Length > 64)
         {
@@ -44,15 +45,16 @@ public partial class RegistrationWindow : Window
         return true;
     }
 
-    private bool isUsernameValid(in string inputUserName,out string validUseName)
+    // Username rules : not null, 6-24 char, unique
+    private bool IsUsernameValid(in string inputUserName,out string validUseName)
     {
-        var user = dbContext.Users.FirstOrDefault(u => u.Username == UsernameInputBox.Text.Trim());
+        var user = _dbContext.Users.FirstOrDefault(u => u.Username == UsernameInputBox.Text.Trim());
         validUseName = "";
         if (user is not null)
         {
             UsernameValidationMassage.Text = "Username already exist.";
             return false;
-        }else if (inputUserName.Trim().Length == 0 || inputUserName.Trim().Length < 6 || inputUserName.Trim().Length > 24)
+        }else if (inputUserName.Trim().Length < 6 || inputUserName.Trim().Length > 24)
         {
             UsernameValidationMassage.Text = "6 to 24 Characters";
             return false;
@@ -65,8 +67,9 @@ public partial class RegistrationWindow : Window
         }
         
     }
-
-    private bool isAgeValid(in string inputAge , out int validAge)
+    
+    // Age rules : 18 to 99 yo.
+    private bool IsAgeValid(in string inputAge , out int validAge)
     {
         validAge = 0;
         try
@@ -76,41 +79,28 @@ public partial class RegistrationWindow : Window
             AgeValidationMassage.Text = "";
             return true;
         }
-        catch (Exception e)
+        catch (Exception)
         {
             AgeValidationMassage.Text = "Between 18 to 99yo.";
             return false;
         }
     }
 
+    //Create user in DB.
     private void CreateUser(string username,int age, string password)
     {
         try
         {
             byte[] salt;
             User newUser = new User(username, age, PasswordHash.HashPassword(password,out salt),Convert.ToBase64String(salt));
-            dbContext.Users.Add(newUser);
-            dbContext.SaveChanges();
-            RegistrationValidationMessage.Text = "Succes!";
+            _dbContext.Users.Add(newUser);
+            _dbContext.SaveChanges();
+            RegistrationValidationMessage.Text = "Success!";
         }
-        catch (Exception e)
+        catch (Exception)
         {
             RegistrationValidationMessage.Text = "Something goes wrong.";
         }
-
-
     }
-    private string ConvertToUnsecureString(SecureString securePassword)
-    {
-        IntPtr unmanagedString = IntPtr.Zero;
-        try
-        {
-            unmanagedString = Marshal.SecureStringToGlobalAllocUnicode(securePassword);
-            return Marshal.PtrToStringUni(unmanagedString);
-        }
-        finally
-        {
-            Marshal.ZeroFreeGlobalAllocUnicode(unmanagedString);
-        }
-    }
+    
 }

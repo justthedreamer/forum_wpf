@@ -7,19 +7,28 @@ using ForumProj.Windows;
 
 namespace ForumProj
 {
-public partial class LoginWindow : Window
-{
-    private bool _isRegistrationWindowOpen = false;
     
-    private RegistrationWindow? _registrationPage;
-    private VisitorWindow? _visitorPage;
+    /// <summary>
+    /// This class allows user to log into forum. 
+    /// </summary>
+    public partial class LoginWindow : Window
+    {
+        //Opened window flag and handler.
+        private bool _isRegistrationWindowOpen = false;
+        private RegistrationWindow? _registrationPage;
+        private VisitorWindow? _visitorPage;
     
     private static readonly ForumContext DbContext = new();
-
+    
+    /// <summary>
+    ///  Constructor
+    /// </summary>
     public LoginWindow()
     {
         InitializeComponent();
     }
+    
+    //Open registration window.
     private void RegistrationButton_OnClick(object sender, RoutedEventArgs e)
     {
         if (!_isRegistrationWindowOpen)
@@ -31,20 +40,23 @@ public partial class LoginWindow : Window
         }
         else  _registrationPage?.Activate();
     }
-    private void RegistrationPage_Closed(object sender, EventArgs e)
-    {
-        _isRegistrationWindowOpen = false;
-    }
     
+    //When registration window is closing it sets flag to false.
+    private void RegistrationPage_Closed(object sender, EventArgs e) => _isRegistrationWindowOpen = false;
+
+    //Sing in Button 
     private void SingInButton_OnClick(object sender, RoutedEventArgs e)
     {
         UserVerification();
     }
-    private void trySingIn(object sender, KeyEventArgs e)
+    //Enable to use Enter as submit button.
+    private void TrySingIn(object sender, KeyEventArgs e)
     {
         if (e.Key == Key.Return) UserVerification();
         else return;
     }
+    
+    //Verify user input data in DB.
     private void UserVerification()
     {
         var user = DbContext.Users.FirstOrDefault(u => u.Username == UsernameInputBox.Text);
@@ -66,13 +78,13 @@ public partial class LoginWindow : Window
             return;
         }
     }
+    
+    //Open visitor interface.
     private void VisitorButton_OnClick(object sender, RoutedEventArgs e)
     {
         _visitorPage = new();
         _visitorPage.Show();
         this.Close();
     }
-
- 
-}
+    }
 }

@@ -5,9 +5,13 @@ using ForumProj.Model;
 
 namespace ForumProj.Windows;
 
-public partial class CreateQuestionWindow : Window
+/// <summary>
+/// This class allow to create new questions.
+/// </summary>
+public partial class CreateQuestionWindow 
 {
-    private static readonly ForumContext dbContext = new();
+    private static readonly ForumContext DbContext = new();
+    
     private static User? _user;
     private static UserWindow? _userWindow;
     public CreateQuestionWindow(User user,UserWindow userWindow)
@@ -16,17 +20,16 @@ public partial class CreateQuestionWindow : Window
         _user = user;
         _userWindow = userWindow;
     }
-
     private void CreateQuestion(object sender, RoutedEventArgs e)
     {
-        var questionTopic = dbContext.Questions.FirstOrDefault(question => question.Topic == TopicTextBox.Text.Trim());
+        var questionTopic = DbContext.Questions.FirstOrDefault(question => question.Topic == TopicTextBox.Text.Trim());
         if (CategoryBox.Text == "" || CategoryBox.Text is null)
         {
             ValidationInfo.Text = "Choose category.";
             return;
         }
 
-        if (TopicTextBox.Text == "" || TopicTextBox.Text is null)
+        if (TopicTextBox.Text == "")
         {
             ValidationInfo.Text = "Enter question topic";
             return;
@@ -39,7 +42,7 @@ public partial class CreateQuestionWindow : Window
         if (questionTopic is not null)
         {
             ValidationInfo.Text = $"This question topic is already exist. You could find it by Q{questionTopic.ID} id " +
-                                  $"in {dbContext.Categories.FirstOrDefault(c => c.ID == questionTopic.Category).Name} category section." +
+                                  $"in {DbContext.Categories.FirstOrDefault(c => c.ID == questionTopic.Category)!.Name} category section." +
                                   $"However if you want to add again this question, please change topic.";
             return;
         }
@@ -52,9 +55,9 @@ public partial class CreateQuestionWindow : Window
 
         try
         {
-            int category = dbContext.Categories.FirstOrDefault(c => c.Name == CategoryBox.Text).ID;
-            dbContext.Questions.Add(new Question(_user.Id, TopicTextBox.Text, ContentTextBox.Text, category));
-            dbContext.SaveChanges();
+            int category = DbContext.Categories.FirstOrDefault(c => c.Name == CategoryBox.Text)!.ID;
+            DbContext.Questions.Add(new Question(_user!.Id, TopicTextBox.Text, ContentTextBox.Text, category));
+            DbContext.SaveChanges();
             ValidationInfo.Text = "Succes";
             _userWindow?.UpdateRecentQuestions();
         }

@@ -60,7 +60,7 @@
                        Margin="0,5,0,5"/>
             
             <TextBox x:Name="UsernameInputBox"  
-                     KeyDown="trySingIn"
+                     KeyDown="TrySingIn"
                      Grid.Row="1" Grid.Column="1"  
                      VerticalAlignment="Top"/>
             
@@ -73,7 +73,7 @@
                        Margin="0,5,0,5" />
 
             <PasswordBox x:Name="PasswordInputBox" 
-                         KeyDown="trySingIn"
+                         KeyDown="TrySingIn"
                          Grid.Row="3" 
                          VerticalAlignment="Top"  />
         </Grid>
