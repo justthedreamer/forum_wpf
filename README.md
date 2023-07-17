@@ -2,7 +2,6 @@
 Realizacja projektu semestralnego z programowania obiektowego.
  
 
-Testowy urzytkownik
- ---
-Login : TestUser
+Testowy urzytkownik  
+Login : TestUser  
 Hasło : 12341234
