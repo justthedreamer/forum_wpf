@@ -120,7 +120,6 @@
             <TextBlock Grid.Row="2" x:Name="CategoryName" 
                        VerticalAlignment="Bottom" 
                        HorizontalAlignment="Right"
-                       Text="Programing"
                        Foreground="#5E81AC"
                        Margin="20,10"/>
             

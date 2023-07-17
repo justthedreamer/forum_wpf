@@ -27,6 +27,7 @@ public partial class QuestionWindowUser
         this.Title = question.Topic;
         _thisUser = user;
         _thisQuestion = question;
+        CategoryName.Text = DbContext.Categories.FirstOrDefault(c => c.ID == question.Category)?.Name;
         
         List<Answer> answers = DbContext.Answers.Where(answer => answer.QuestionID == question.ID).ToList();
         
